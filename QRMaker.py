@@ -7,10 +7,8 @@ import socket
 import time
 import PIL
 
-#You probaly dont have to change this
-mp.set_start_method('fork')
 Port = 8000
-exitFlat = 0
+exitFlag = 0
 
 def main():
     IP = GetIP()
@@ -24,9 +22,6 @@ def main():
     ServerThread.join()
     QRThread.join()
     
-
-
-
 def GetIP():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -38,46 +33,36 @@ def GetIP():
         s.close()
     return str(IP)
 
-
 def QR(IP):
-
     url = "http://"+IP+":"+str(Port)
-
-    HttpPage = urllib.request.urlopen(url)
-
-    for bline in HttpPage:
-        line = str(bline)
-        if(".cia" in line):
-            line = line.strip("b'<li><a href=")
-            line = line.strip('"')
-            line = line.split('"',1)
-            Code = IP+":"+str(Port)+"/"+str(line[0])
-
-            QRCode = qrcode.make(Code)
-            QRCode.show()
-
-
-
-
+    
+    try:
+        HttpPage = urllib.request.urlopen(url)
+        
+        for bline in HttpPage:
+            line = bline.decode('utf-8')
+            if(".cia" in line):
+                if 'href="' in line:
+                    start = line.find('href="') + 6
+                    end = line.find('"', start)
+                    if start > 5 and end > start:
+                        filename = line[start:end]
+                        Code = "http://"+IP+":"+str(Port)+"/"+filename
+                        QRCode = qrcode.make(Code)
+                        QRCode.show()
+    except Exception as e:
+        print(f"An error occurred whilst generating the QR code: {e}")
 
 def Server(IP):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(('10.255.255.255', 1))
-        IP = s.getsockname()[0]
-    except Exception:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-   
     handler = http.server.SimpleHTTPRequestHandler
+    
+    with socketserver.TCPServer(('0.0.0.0', Port), handler) as httpd:
+        print(f"Server started at http://{IP}:{Port}")
+        print("Press Ctrl+C to stop")
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("\nServer stopped")
 
-    with socketserver.TCPServer((str(IP), Port), handler) as httpd:
-        print("Server started...")
-        httpd.serve_forever()
-
-
-
-
-
-main()
+if __name__ == "__main__":
+    main()
