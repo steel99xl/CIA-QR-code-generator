@@ -1,5 +1,6 @@
 # CIA-QR-code-generator
-Hosts a simple web server and generates QR codes to scan with FBI 3ds homebrew
+Hosts a simple web server and generates QR codes to scan with FBI 3ds homebrew<br>
+QR Code is a registered trademark of Denso Wave Incorporated
 
 # How to use
 Run QRMaker.py in the same folder as your .cia files
