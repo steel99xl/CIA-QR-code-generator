@@ -14,5 +14,5 @@ dependancies
 ```pip3 install -r requirements.txt```
 
 # Changes
-We have enhanced security and made it compatible with Windows<br>
-I have also bound it to 0.0.0.0 so that it is accessible from all interfaces
+We have improved the security features and made the software compatible with Windows<br>
+I have also configured it to listen on all interfaces by binding it to 0.0.0.0
