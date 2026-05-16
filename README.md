@@ -4,9 +4,13 @@ Hosts a simple web server and generates QR codes to scan with FBI 3ds homebrew
 # How to use
 Run QRMaker.py in the same folder as your .cia files
 
-```python3 ./QRMaker.py```
+```py ./QRMaker.py```
 
 # Install
 dependancies
 
 ```pip3 install -r requirements.txt```
+
+# Changes
+We have enhanced security and made it compatible with Windows<br>
+I have also bound it to 0.0.0.0 so that it is accessible from all interfaces
